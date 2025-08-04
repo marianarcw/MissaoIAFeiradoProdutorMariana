@@ -21,11 +21,11 @@ document.addEventListener('DOMContentLoaded', function() {
     // Adicionar/Atualizar produto no estoque
     adicionarBtn.addEventListener('click', function() {
         const produtoNome = produtoSelect.value;
-        const quantidade = parseInt(quantidadeInput.value);
+        const quantidade = parseFloat(quantidadeInput.value);
         const preco = parseFloat(precoInput.value);
 
-        if (!produtoNome || isNaN(quantidade) || quantidade < 0 || isNaN(preco) || preco < 0) {
-            alert('Preencha todos os campos corretamente!');
+        if (!produtoNome || isNaN(quantidade) || quantidade <= 0 || isNaN(preco) || preco <= 0) {
+            alert('Preencha todos os campos corretamente com valores positivos!');
             return;
         }
 
@@ -57,6 +57,11 @@ document.addEventListener('DOMContentLoaded', function() {
     function atualizarEstoque() {
         estoqueList.innerHTML = '';
         let total = 0;
+
+        if (estoque.length === 0) {
+            totalValue.textContent = '0.00';
+            return;
+        }
 
         estoque.forEach(produto => {
             const valorTotal = produto.quantidade * produto.preco;
