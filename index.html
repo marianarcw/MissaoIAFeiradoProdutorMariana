@@ -1,42 +1,88 @@
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Controle Feira do Produtor</title>
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
-    <div class="container">
-        <header>
-            <h1>Controle Feira do Produtor</h1>
-        </header>
+document.addEventListener('DOMContentLoaded', function() {
+    const estoque = [];
+    const produtoSelect = document.getElementById('produto-select');
+    const produtoImg = document.getElementById('produto-img');
+    const quantidadeInput = document.getElementById('quantidade-input');
+    const precoInput = document.getElementById('preco-input');
+    const adicionarBtn = document.getElementById('adicionar-btn');
+    const estoqueList = document.getElementById('estoque-list');
+    const totalValue = document.getElementById('total-value');
+
+    // Mostrar imagem do produto selecionado
+    produtoSelect.addEventListener('change', function() {
+        if (this.value) {
+            produtoImg.src = `img/${this.value}.jpg`;
+            produtoImg.style.display = 'block';
+        } else {
+            produtoImg.style.display = 'none';
+        }
+    });
+
+    // Adicionar/Atualizar produto no estoque
+    adicionarBtn.addEventListener('click', function() {
+        const produtoNome = produtoSelect.value;
+        const quantidade = parseFloat(quantidadeInput.value);
+        const preco = parseFloat(precoInput.value);
+
+        if (!produtoNome || isNaN(quantidade) || quantidade <= 0 || isNaN(preco) || preco <= 0) {
+            alert('Preencha todos os campos corretamente com valores positivos!');
+            return;
+        }
+
+        const index = estoque.findIndex(item => item.nome === produtoNome);
         
-        <div class="produto-form">
-            <h2>Gerenciar Estoque</h2>
-            <select id="produto-select">
-                <option value="">Selecione um produto</option>
-                <option value="tomate">Tomate</option>
-                <option value="cebola">Cebola</option>
-                <option value="cenoura">Cenoura</option>
-                <option value="quiabo">Quiabo</option>
-                <option value="mandioca">Mandioca</option>
-            </select>
-            <img id="produto-img" src="" alt="Imagem do Produto" style="display: none; width: 50px; height: 50px; object-fit: cover; margin: 10px 0;">
-            <input type="number" id="quantidade-input" placeholder="Quantidade (kg)" min="0">
-            <input type="number" id="preco-input" placeholder="Preço por kg" min="0" step="0.01">
-            <button id="adicionar-btn">Atualizar Estoque</button>
-        </div>
+        if (index !== -1) {
+            estoque[index] = {
+                nome: produtoNome,
+                quantidade: quantidade,
+                preco: preco,
+                img: `img/${produtoNome}.jpg`
+            };
+        } else {
+            estoque.push({
+                nome: produtoNome,
+                quantidade: quantidade,
+                preco: preco,
+                img: `img/${produtoNome}.jpg`
+            });
+        }
 
-        <div class="estoque-container">
-            <h2>Estoque Atual</h2>
-            <div id="estoque-list"></div>
-            <div class="total-section">
-                <p>Valor total em estoque: R$ <span id="total-value">0.00</span></p>
-            </div>
-        </div>
-    </div>
+        atualizarEstoque();
+        produtoSelect.value = '';
+        quantidadeInput.value = '';
+        precoInput.value = '';
+        produtoImg.style.display = 'none';
+    });
 
-    <script src="script.js"></script>
-</body>
-</html>
+    function atualizarEstoque() {
+        estoqueList.innerHTML = '';
+        let total = 0;
+
+        if (estoque.length === 0) {
+            totalValue.textContent = '0.00';
+            return;
+        }
+
+        estoque.forEach(produto => {
+            const valorTotal = produto.quantidade * produto.preco;
+            total += valorTotal;
+
+            const card = document.createElement('div');
+            card.className = 'produto-card';
+            card.innerHTML = `
+                <img src="${produto.img}" alt="${produto.nome}">
+                <div class="produto-info">
+                    <div class="produto-nome">${produto.nome.charAt(0).toUpperCase() + produto.nome.slice(1)}</div>
+                    <div class="produto-detalhes">
+                        <span>Estoque: ${produto.quantidade} kg</span>
+                        <span>Preço: R$ ${produto.preco.toFixed(2)}/kg</span>
+                        <span>Total: R$ ${valorTotal.toFixed(2)}</span>
+                    </div>
+                </div>
+            `;
+            estoqueList.appendChild(card);
+        });
+
+        totalValue.textContent = total.toFixed(2);
+    }
+});
