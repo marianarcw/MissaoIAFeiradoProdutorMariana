@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Controle Agrícola</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Controle de Estoque Agrícola</h1>
+        
+        <div class="produto-form">
+            <h2>Adicionar Produto</h2>
+            <select id="produto-select">
+                <option value="">Selecione um produto</option>
+                <option value="tomate">Tomate</option>
+                <option value="cebola">Cebola</option>
+                <option value="cenoura">Cenoura</option>
+                <option value="quiabo">Quiabo</option>
+                <option value="mandioca">Mandioca</option>
+            </select>
+            <input type="number" id="quantidade-input" placeholder="Quantidade" min="0">
+            <input type="number" id="preco-input" placeholder="Preço unitário" min="0" step="0.01">
+            <button id="adicionar-btn">Adicionar ao Estoque</button>
+        </div>
+
+        <div class="estoque-container">
+            <h2>Estoque Atual</h2>
+            <div id="estoque-list"></div>
+            <div class="total-section">
+                <p>Valor total em estoque: R$ <span id="total-value">0.00</span></p>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
