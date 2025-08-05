@@ -13,6 +13,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (this.value) {
             produtoImg.src = `img/${this.value}.jpg`;
             produtoImg.style.display = 'block';
+            produtoImg.alt = this.value;
         } else {
             produtoImg.style.display = 'none';
         }
@@ -58,11 +59,6 @@ document.addEventListener('DOMContentLoaded', function() {
         estoqueList.innerHTML = '';
         let total = 0;
 
-        if (estoque.length === 0) {
-            totalValue.textContent = '0.00';
-            return;
-        }
-
         estoque.forEach(produto => {
             const valorTotal = produto.quantidade * produto.preco;
             total += valorTotal;
@@ -70,7 +66,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const card = document.createElement('div');
             card.className = 'produto-card';
             card.innerHTML = `
-                <img src="${produto.img}" alt="${produto.nome}">
+                <img src="${produto.img}" alt="${produto.nome}" class="produto-img">
                 <div class="produto-info">
                     <div class="produto-nome">${produto.nome.charAt(0).toUpperCase() + produto.nome.slice(1)}</div>
                     <div class="produto-detalhes">
